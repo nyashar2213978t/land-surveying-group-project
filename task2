@@ -1,0 +1,67 @@
+"""
+Plot Original and Translated Coordinates from CSV Files
+
+This script reads X and Y coordinates from a CSV file, plots the original
+coordinates on a scatterplot, translates the points by a fixed offset,
+and then plots the translated coordinates on the same scatterplot.
+"""
+
+import matplotlib.pyplot as plt
+import csv
+
+class Point:
+    def _init_(self, x, y):
+        self.x = x
+        self.y = y
+
+    def translate(self, dx, dy):
+        self.x += dx
+        self.y += dy
+
+    def _str_(self):
+        return f"({self.x}, {self.y})"
+
+def main():
+    # Prompt the user to enter the file name
+    file_name = input("Enter the name of the CSV file with X and Y coordinates: ")
+
+    # Read coordinates from the CSV file
+    points = read_csv_file(file_name)
+
+    # Plot the original coordinates on a scatterplot
+    original_x_coords = [p.x for p in points]
+    original_y_coords = [p.y for p in points]
+    plt.scatter(original_x_coords, original_y_coords, color="black", label="Original Coordinates")
+
+    # Translate the points
+    dx = 5
+    dy = 2
+    for point in points:
+        point.translate(dx, dy)
+
+    # Plot the translated coordinates on the same scatterplot
+    translated_x_coords = [p.x for p in points]
+    translated_y_coords = [p.y for p in points]
+    plt.scatter(translated_x_coords, translated_y_coords, color="green", label="Translated Coordinates")
+
+    # Add a legend and show the plot
+    plt.title("Original and Translated Coordinates")
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.legend()
+    plt.show()
+
+def read_csv_file(file_name):
+    # Read coordinates from a CSV file
+    points = []
+    with open(file_name, "r") as file:
+        csv_reader = csv.reader(file)
+        next(csv_reader)  # Skip the header row
+        for row in csv_reader:
+            x = float(row[0])
+            y = float(row[1])
+            points.append(Point(x, y))
+    return points
+
+if _name_ == "_main_":
+    main()
